@@ -11,7 +11,7 @@ const routes = [
     component: Dependente
   },
   {
-    path: '/funcionario',
+    path: '/',
     name: 'funcionario',
     
     component: () => import(/* webpackChunkName: "funcionario" */ '../views/FuncionarioView.vue')
