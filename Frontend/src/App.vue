@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <nav>
-      <router-link to="/funcionario">Funcionario</router-link>|
+      <router-link to="/">Funcionario</router-link>|
       <router-link to="/dependente">Dependentes</router-link> 
       
     </nav>
