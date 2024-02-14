@@ -2,7 +2,7 @@
 <template>
   <div class="container">
     <div class="primeira bg-light p-4">
-      <b-button variant="success" class="mb-2" @click="mostrarFormulario = !mostrarFormulario">
+      <b-button variant="success" class="mb-2" v-b-modal.modal-adicionar>
         Adicionar Funcionário
       </b-button>
       <div class="card">
@@ -10,7 +10,7 @@
         <b-table striped hover :items="items" :fields="fields" class="mb-3 table table-bordered">
           <template v-slot:cell(acao)="data">
             <div class="d-flex justify-content-center">
-              <b-button variant="primary" @click="editar(data.item)" >
+              <b-button variant="primary" @click="abrirModalEdicao(data.item)" >
                 <b-icon icon="pencil-fill"></b-icon>
               </b-button>
               <b-button variant="danger" @click="confirmDelete(data.item)">
@@ -19,32 +19,22 @@
             </div>
           </template>
         </b-table>
-        <b-card v-if="mostrarFormulario">
-          <h3 class="mb-3">Adicionar Funcionário</h3>
-          <div class="mb-3">
-            <label for="nomeFuncionario">Nome:</label>
-            <input id="nomeFuncionario" type="text" v-model="nomeFuncionario" class="form-control">
-          </div>
-          <div class="d-flex justify-content-end">
-            <b-button variant="danger" size="sm" class="mr-2" @click="cancelarAdicao">Cancelar</b-button>
-            <b-button class="bg-success" size="sm" @click="handleAdiciona">Salvar</b-button>
-          </div>
-        </b-card>
-        <b-card v-if="mostrarFormularioEditar">
-          <h3 class="mb-3">Editar Funcionário</h3>
-          <div class="mb-3">
-            <label for="nomeFuncionarioEdit">Nome:</label>
-            <input id="nomeFuncionarioEdit" type="text" v-model="nomeFuncionarioEdit" class="form-control">
-          </div>
-          <div class="d-flex justify-content-end">
-            <b-button variant="danger" size="sm" class="mr-2" @click="cancelarEdicao">Cancelar</b-button>
-            <b-button class="bg-success" size="sm" @click="editarFuncionario">Salvar</b-button>
-          </div>
-        </b-card>
       </div>
     </div>
     <b-modal id="modal-1" ref="modalExcluir" title="Deletar Funcionario" @ok="ExcluirFuncionario()" @cancelar="fecharModalExcluirFuncionario()">
       <p class="my-4">Deseja deletar o funcionario ?</p>
+    </b-modal>
+    <b-modal id="modal-adicionar" ref="modalAdicionarFuncionario" title="Adicionar Funcionario" ok-title="Salvar" @ok="handleAdiciona()" @cancelar="fecharModalAdicionarFuncionario()">
+      <div class="mb-3">
+        <label for="nome">Nome:</label>
+        <input id="nome" type="text" v-model="nomeFuncionario" class="form-control">
+      </div>
+    </b-modal>
+    <b-modal id="modal-editar" ref="modalEditar" title="Editar Funcionario" ok-title="Salvar" @ok="editarFuncionario()" @cancelar="fecharModalEditarFuncionario()">
+      <div class="mb-3">
+        <label for="nomeFuncionarioEdit">Nome:</label>
+        <input id="nomeFuncionarioEdit" type="text" v-model="nomeFuncionarioEdit" class="form-control">
+      </div>
     </b-modal>
   </div>
 </template>
@@ -63,8 +53,6 @@ export default {
       ],
       items: [],
       nomeFuncionario: '',
-      mostrarFormulario: false,
-      mostrarFormularioEditar: false,
       nomeFuncionarioEdit:'',
       idFuncionarioEdit: null,
       idFuncionarioDelete: '',
@@ -128,24 +116,24 @@ export default {
       this.$refs.modalExcluir.show()
       this.idFuncionarioDelete = item.id
     },
+    abrirModalEdicao(item) {
+      this.$refs.modalEditar.show()
+      this.idFuncionarioEdit = item.id;
+      this.nomeFuncionarioEdit = item.nome;
+    },
+    fecharModalEditarFuncionario() {
+      this.$refs.modalEditar.hide()
+      this.idFuncionarioEdit ='';
+      this.nomeFuncionarioEdit = '';
+    },
     fecharModalExcluirFuncionario() {
       this.$refs.modalExcluir.hide()
       this.idFuncionarioDelete = null
     },
-    cancelarAdicao() {
+    fecharModalAdicionarFuncionario() {
+      this.$refs.modalExcluir.hide()
       this.nomeFuncionario = '';
-      this.mostrarFormulario = false;
     },
-    cancelarEdicao() {
-      this.idFuncionarioEdit ='';
-      this.nomeFuncionarioEdit = '';
-      this.mostrarFormularioEditar = false;
-    },
-    editar(item) {
-      this.idFuncionarioEdit = item.id;
-      this.nomeFuncionarioEdit = item.nome;
-      this.mostrarFormularioEditar = true;
-    }
   }
 }
 </script>
